@@ -6,10 +6,14 @@
     <title>Virtual Pet - Simulasi Pou</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF416C">
+    <meta name="description" content="Game simulasi hewan peliharaan virtual seperti Pou">
 </head>
 <body>
     <div class="game-container">
+        <!-- Header Game -->
         <header class="game-header">
             <div class="header-left">
                 <h1><i class="fas fa-paw"></i> Virtual Pet</h1>
@@ -22,132 +26,298 @@
                     <span id="coin-count">500</span>
                 </div>
                 <div class="level-display">
-                    Level <span id="level">1</span>
+                    <i class="fas fa-star"></i> Level <span id="level">1</span>
+                </div>
+                <div class="time-display">
+                    <i class="fas fa-clock"></i> <span id="game-time">00:00</span>
                 </div>
             </div>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
         </header>
 
+        <!-- Main Content -->
         <main class="game-main">
-            <div class="left-panel">
-                <div class="pet-display">
-                    <div class="pet-container">
-                        <div class="pet" id="pet">
-                            <div class="pet-face">
-                                <div class="eyes">
-                                    <div class="eye left"></div>
-                                    <div class="eye right"></div>
+            <!-- Sidebar untuk Desktop -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-gamepad"></i> Mini Games</h3>
+                    <div class="minigame-list">
+                        <button class="minigame-btn" data-game="coin-catch">
+                            <i class="fas fa-coins"></i>
+                            <span>Tangkap Koin</span>
+                        </button>
+                        <button class="minigame-btn" data-game="memory">
+                            <i class="fas fa-brain"></i>
+                            <span>Game Memori</span>
+                        </button>
+                        <button class="minigame-btn" data-game="feed-fast">
+                            <i class="fas fa-utensils"></i>
+                            <span>Makan Cepat</span>
+                        </button>
+                        <button class="minigame-btn" data-game="clean-up">
+                            <i class="fas fa-broom"></i>
+                            <span>Bersih-bersih</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-cog"></i> Pengaturan</h3>
+                    <div class="settings">
+                        <div class="setting-item">
+                            <span>Suara</span>
+                            <label class="switch">
+                                <input type="checkbox" id="sound-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span>Musik</span>
+                            <label class="switch">
+                                <input type="checkbox" id="music-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span>Notifikasi</span>
+                            <label class="switch">
+                                <input type="checkbox" id="notif-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-chart-bar"></i> Statistik</h3>
+                    <div class="stats-list">
+                        <div class="stat-item">
+                            <span>Permainan:</span>
+                            <span id="total-games">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Makanan Diberi:</span>
+                            <span id="total-feeds">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Waktu Bermain:</span>
+                            <span id="total-playtime">0m</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Koin Dikumpulkan:</span>
+                            <span id="total-coins">500</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Konten Utama -->
+            <div class="main-content">
+                <!-- Info Pet -->
+                <div class="pet-info-section">
+                    <div class="pet-display">
+                        <div class="pet-container">
+                            <div class="pet" id="pet">
+                                <div class="pet-face">
+                                    <div class="eyes">
+                                        <div class="eye left"></div>
+                                        <div class="eye right"></div>
+                                    </div>
+                                    <div class="mouth"></div>
                                 </div>
-                                <div class="mouth"></div>
+                            </div>
+                            <div class="pet-mood" id="pet-mood">😊</div>
+                            <div class="pet-effects">
+                                <div class="effect" id="effect-happy" style="display: none;">❤️</div>
+                                <div class="effect" id="effect-sad" style="display: none;">💧</div>
+                                <div class="effect" id="effect-hungry" style="display: none;">🍖</div>
+                                <div class="effect" id="effect-sleepy" style="display: none;">💤</div>
                             </div>
                         </div>
-                        <div class="pet-mood" id="pet-mood">😊</div>
+                        
+                        <div class="pet-details">
+                            <div class="pet-name">
+                                <input type="text" id="pet-name-input" value="Petty" maxlength="12">
+                                <button id="change-name-btn"><i class="fas fa-edit"></i></button>
+                            </div>
+                            <div class="pet-status" id="pet-status">Bahagia dan sehat!</div>
+                            <div class="pet-age">
+                                <i class="fas fa-birthday-cake"></i> Usia: <span id="pet-age">1</span> hari
+                            </div>
+                        </div>
                     </div>
-                    <div class="pet-name">
-                        <input type="text" id="pet-name-input" value="Petty" maxlength="10">
-                        <button id="change-name-btn"><i class="fas fa-edit"></i></button>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="actions-section">
+                    <div class="action-buttons">
+                        <button class="action-btn feed" id="feed-btn">
+                            <i class="fas fa-utensils"></i>
+                            <span>Beri Makan</span>
+                        </button>
+                        <button class="action-btn play" id="play-btn">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Bermain</span>
+                        </button>
+                        <button class="action-btn clean" id="clean-btn">
+                            <i class="fas fa-bath"></i>
+                            <span>Mandikan</span>
+                        </button>
+                        <button class="action-btn sleep" id="sleep-btn">
+                            <i class="fas fa-bed"></i>
+                            <span>Tidurkan</span>
+                        </button>
+                        <button class="action-btn heal" id="heal-btn">
+                            <i class="fas fa-heart"></i>
+                            <span>Obati</span>
+                        </button>
+                        <button class="action-btn train" id="train-btn">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Latih</span>
+                        </button>
                     </div>
-                    <div class="pet-status" id="pet-status">Bahagia dan sehat!</div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="action-btn feed" id="feed-btn">
-                        <i class="fas fa-utensils"></i> Beri Makan
-                    </button>
-                    <button class="action-btn play" id="play-btn">
-                        <i class="fas fa-gamepad"></i> Bermain
-                    </button>
-                    <button class="action-btn clean" id="clean-btn">
-                        <i class="fas fa-bath"></i> Mandikan
-                    </button>
-                    <button class="action-btn sleep" id="sleep-btn">
-                        <i class="fas fa-bed"></i> Tidurkan
-                    </button>
-                </div>
-
-                <div class="extra-buttons">
-                    <button class="extra-btn" id="shop-btn">
-                        <i class="fas fa-shopping-cart"></i> Toko
-                    </button>
-                    <button class="extra-btn" id="minigame-btn">
-                        <i class="fas fa-dice"></i> Mini Game
-                    </button>
-                    <button class="extra-btn" id="sound-toggle">
-                        <i class="fas fa-volume-up"></i> Suara
-                    </button>
-                </div>
-            </div>
-
-            <div class="right-panel">
-                <div class="stats-container">
-                    <h2><i class="fas fa-chart-line"></i> Status</h2>
                     
-                    <div class="stat">
-                        <div class="stat-header">
-                            <span>Kelaparan</span>
-                            <span id="hunger-value">75%</span>
-                        </div>
-                        <div class="stat-bar">
-                            <div class="stat-fill hunger" id="hunger-bar"></div>
+                    <div class="extra-buttons">
+                        <button class="extra-btn" id="shop-btn">
+                            <i class="fas fa-shopping-cart"></i> Toko
+                        </button>
+                        <button class="extra-btn" id="inventory-btn">
+                            <i class="fas fa-backpack"></i> Inventori
+                        </button>
+                        <button class="extra-btn" id="save-btn">
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
+                        <button class="extra-btn" id="minigame-btn">
+                            <i class="fas fa-gamepad"></i> Mini Game
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats dan Inventory -->
+                <div class="stats-inventory-section">
+                    <!-- Stats Bars -->
+                    <div class="stats-container">
+                        <h2><i class="fas fa-chart-line"></i> Status Pet</h2>
+                        
+                        <div class="stats-grid">
+                            <div class="stat">
+                                <div class="stat-header">
+                                    <span><i class="fas fa-hamburger"></i> Kelaparan</span>
+                                    <span id="hunger-value">75%</span>
+                                </div>
+                                <div class="stat-bar">
+                                    <div class="stat-fill hunger" id="hunger-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-header">
+                                    <span><i class="fas fa-smile"></i> Kebahagiaan</span>
+                                    <span id="happiness-value">85%</span>
+                                </div>
+                                <div class="stat-bar">
+                                    <div class="stat-fill happiness" id="happiness-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-header">
+                                    <span><i class="fas fa-bolt"></i> Energi</span>
+                                    <span id="energy-value">60%</span>
+                                </div>
+                                <div class="stat-bar">
+                                    <div class="stat-fill energy" id="energy-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-header">
+                                    <span><i class="fas fa-shower"></i> Kebersihan</span>
+                                    <span id="cleanliness-value">80%</span>
+                                </div>
+                                <div class="stat-bar">
+                                    <div class="stat-fill cleanliness" id="cleanliness-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-header">
+                                    <span><i class="fas fa-heartbeat"></i> Kesehatan</span>
+                                    <span id="health-value">90%</span>
+                                </div>
+                                <div class="stat-bar">
+                                    <div class="stat-fill health" id="health-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-header">
+                                    <span><i class="fas fa-chart-bar"></i> Pengalaman</span>
+                                    <span id="xp-value">150/200</span>
+                                </div>
+                                <div class="stat-bar">
+                                    <div class="stat-fill xp" id="xp-bar"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="stat">
-                        <div class="stat-header">
-                            <span>Kebahagiaan</span>
-                            <span id="happiness-value">85%</span>
+                    <!-- Inventory -->
+                    <div class="inventory-container">
+                        <div class="inventory-header">
+                            <h2><i class="fas fa-box-open"></i> Inventori</h2>
+                            <div class="inventory-tabs">
+                                <button class="tab-btn active" data-tab="food">Makanan</button>
+                                <button class="tab-btn" data-tab="items">Item</button>
+                                <button class="tab-btn" data-tab="special">Spesial</button>
+                            </div>
                         </div>
-                        <div class="stat-bar">
-                            <div class="stat-fill happiness" id="happiness-bar"></div>
-                        </div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="stat-header">
-                            <span>Energi</span>
-                            <span id="energy-value">60%</span>
-                        </div>
-                        <div class="stat-bar">
-                            <div class="stat-fill energy" id="energy-bar"></div>
-                        </div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="stat-header">
-                            <span>Kebersihan</span>
-                            <span id="cleanliness-value">80%</span>
-                        </div>
-                        <div class="stat-bar">
-                            <div class="stat-fill cleanliness" id="cleanliness-bar"></div>
-                        </div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="stat-header">
-                            <span>Pengalaman</span>
-                            <span id="xp-value">150/200</span>
-                        </div>
-                        <div class="stat-bar">
-                            <div class="stat-fill xp" id="xp-bar"></div>
+                        <div class="inventory-content">
+                            <div class="inventory-tab active" id="tab-food">
+                                <div class="inventory-grid" id="inventory-food">
+                                    <!-- Items makanan akan diisi oleh JavaScript -->
+                                </div>
+                            </div>
+                            <div class="inventory-tab" id="tab-items">
+                                <div class="inventory-grid" id="inventory-items">
+                                    <!-- Items lainnya akan diisi oleh JavaScript -->
+                                </div>
+                            </div>
+                            <div class="inventory-tab" id="tab-special">
+                                <div class="inventory-grid" id="inventory-special">
+                                    <!-- Items spesial akan diisi oleh JavaScript -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="inventory-container">
-                    <h2><i class="fas fa-box-open"></i> Inventori</h2>
-                    <div class="inventory-grid" id="inventory-items">
-                        <!-- Items akan diisi oleh JavaScript -->
-                    </div>
-                </div>
-
-                <div class="achievements-container">
+                <!-- Achievements -->
+                <div class="achievements-section">
                     <h2><i class="fas fa-trophy"></i> Pencapaian</h2>
-                    <div class="achievements-list" id="achievements-list">
+                    <div class="achievements-grid" id="achievements-list">
                         <!-- Achievements akan diisi oleh JavaScript -->
                     </div>
                 </div>
             </div>
         </main>
 
+        <!-- Footer Game -->
+        <footer class="game-footer">
+            <div class="footer-content">
+                <p>Virtual Pet Game © 2024 - Dibuat dengan ❤️</p>
+                <div class="footer-links">
+                    <button id="help-btn"><i class="fas fa-question-circle"></i> Bantuan</button>
+                    <button id="about-btn"><i class="fas fa-info-circle"></i> Tentang</button>
+                    <button id="reset-btn"><i class="fas fa-redo"></i> Reset Game</button>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Message Box -->
         <div class="message-box" id="message-box">
             <p id="message-text">Hai! Aku hewan peliharaanmu!</p>
         </div>
@@ -157,40 +327,174 @@
     <div class="modal" id="shop-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><i class="fas fa-store"></i> Toko Makanan</h2>
+                <h2><i class="fas fa-store"></i> Toko Virtual Pet</h2>
                 <button class="close-btn" id="close-shop">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="shop-coins">
                     <i class="fas fa-coins"></i> <span id="shop-coin-count">500</span>
+                    <div class="shop-tabs">
+                        <button class="shop-tab-btn active" data-shop="food">Makanan</button>
+                        <button class="shop-tab-btn" data-shop="items">Item</button>
+                        <button class="shop-tab-btn" data-shop="upgrades">Upgrade</button>
+                        <button class="shop-tab-btn" data-shop="cosmetics">Kostum</button>
+                    </div>
                 </div>
-                <div class="shop-items" id="shop-items">
-                    <!-- Items toko akan diisi oleh JavaScript -->
+                <div class="shop-items-container">
+                    <div class="shop-tab active" id="shop-food">
+                        <div class="shop-items" id="shop-food-items"></div>
+                    </div>
+                    <div class="shop-tab" id="shop-items">
+                        <div class="shop-items" id="shop-items-items"></div>
+                    </div>
+                    <div class="shop-tab" id="shop-upgrades">
+                        <div class="shop-items" id="shop-upgrades-items"></div>
+                    </div>
+                    <div class="shop-tab" id="shop-cosmetics">
+                        <div class="shop-items" id="shop-cosmetics-items"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Mini Game -->
+    <!-- Modal Mini Game Selection -->
     <div class="modal" id="minigame-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><i class="fas fa-dice"></i> Mini Game - Koin Berjatuhan</h2>
+                <h2><i class="fas fa-gamepad"></i> Pilih Mini Game</h2>
                 <button class="close-btn" id="close-minigame">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="minigame-instructions">
-                    <p>Klik koin yang jatuh untuk mengumpulkan poin! Dapatkan 10 poin dalam 30 detik untuk menang!</p>
-                    <div class="minigame-stats">
-                        <div>Waktu: <span id="game-time">30</span>s</div>
-                        <div>Poin: <span id="game-score">0</span></div>
-                        <div>Target: 10 poin</div>
+                <div class="minigame-selection">
+                    <div class="minigame-card" data-game="coin-catch">
+                        <div class="minigame-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <h3>Tangkap Koin</h3>
+                        <p>Tangkap koin yang jatuh sebelum menghilang!</p>
+                        <div class="minigame-info">
+                            <span><i class="fas fa-clock"></i> 60 detik</span>
+                            <span><i class="fas fa-trophy"></i> Hadiah: 50-200 koin</span>
+                        </div>
+                    </div>
+                    
+                    <div class="minigame-card" data-game="memory">
+                        <div class="minigame-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Game Memori</h3>
+                        <p>Temukan pasangan kartu yang sama!</p>
+                        <div class="minigame-info">
+                            <span><i class="fas fa-clock"></i> Tak terbatas</span>
+                            <span><i class="fas fa-trophy"></i> Hadiah: 30 koin/pasangan</span>
+                        </div>
+                    </div>
+                    
+                    <div class="minigame-card" data-game="feed-fast">
+                        <div class="minigame-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3>Makan Cepat</h3>
+                        <p>Beri makan pet sebanyak mungkin dalam waktu terbatas!</p>
+                        <div class="minigame-info">
+                            <span><i class="fas fa-clock"></i> 45 detik</span>
+                            <span><i class="fas fa-trophy"></i> Hadiah: 20 koin/makanan</span>
+                        </div>
+                    </div>
+                    
+                    <div class="minigame-card" data-game="clean-up">
+                        <div class="minigame-icon">
+                            <i class="fas fa-broom"></i>
+                        </div>
+                        <h3>Bersih-bersih</h3>
+                        <p>Klik kotoran untuk membersihkan area!</p>
+                        <div class="minigame-info">
+                            <span><i class="fas fa-clock"></i> 30 detik</span>
+                            <span><i class="fas fa-trophy"></i> Hadiah: 10 koin/kotoran</span>
+                        </div>
                     </div>
                 </div>
-                <div class="minigame-area" id="minigame-area">
-                    <!-- Koin akan muncul di sini -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Mini Game Play -->
+    <div class="modal game-modal" id="minigame-play-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="game-title">Mini Game</h2>
+                <button class="close-btn" id="close-game">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span>Waktu:</span>
+                        <span id="game-time">60</span>s
+                    </div>
+                    <div class="game-stat">
+                        <span>Skor:</span>
+                        <span id="game-score">0</span>
+                    </div>
+                    <div class="game-stat">
+                        <span>Target:</span>
+                        <span id="game-target">0</span>
+                    </div>
+                    <div class="game-stat">
+                        <span>Koin:</span>
+                        <span id="game-coins">0</span>
+                    </div>
                 </div>
-                <button class="start-game-btn" id="start-game-btn">Mulai Game</button>
+                
+                <div class="game-area" id="game-area">
+                    <!-- Game akan dimuat di sini -->
+                </div>
+                
+                <div class="game-controls">
+                    <button class="game-btn" id="start-game-btn">Mulai Game</button>
+                    <button class="game-btn" id="pause-game-btn">Jeda</button>
+                    <button class="game-btn" id="restart-game-btn">Ulangi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Help -->
+    <div class="modal" id="help-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> Bantuan & Panduan</h2>
+                <button class="close-btn" id="close-help">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-content">
+                    <h3>Cara Bermain:</h3>
+                    <ul>
+                        <li><strong>Beri Makan:</strong> Klik tombol "Beri Makan" untuk mengurangi kelaparan</li>
+                        <li><strong>Bermain:</strong> Klik tombol "Bermain" untuk meningkatkan kebahagiaan</li>
+                        <li><strong>Mandikan:</strong> Klik tombol "Mandikan" untuk meningkatkan kebersihan</li>
+                        <li><strong>Tidurkan:</strong> Klik tombol "Tidurkan" untuk mengembalikan energi</li>
+                        <li><strong>Obati:</strong> Gunakan item kesehatan saat pet sakit</li>
+                        <li><strong>Latih:</strong> Latih pet untuk meningkatkan level lebih cepat</li>
+                    </ul>
+                    
+                    <h3>Mini Games:</h3>
+                    <ul>
+                        <li><strong>Tangkap Koin:</strong> Klik koin yang jatuh untuk mendapatkan koin</li>
+                        <li><strong>Game Memori:</strong> Temukan pasangan kartu yang sama</li>
+                        <li><strong>Makan Cepat:</strong> Beri makan pet sebanyak mungkin</li>
+                        <li><strong>Bersih-bersih:</strong> Klik kotoran untuk membersihkan</li>
+                    </ul>
+                    
+                    <h3>Tips:</h3>
+                    <ul>
+                        <li>Jaga semua statistik di atas 30%</li>
+                        <li>Gunakan mini game untuk mendapatkan koin tambahan</li>
+                        <li>Beli item di toko untuk membantu merawat pet</li>
+                        <li>Simpan game secara teratur</li>
+                        <li>Naikkan level untuk membuka item baru</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -203,6 +507,21 @@
     <audio id="sound-coin" src="sounds/coin.mp3" preload="auto"></audio>
     <audio id="sound-levelup" preload="auto">
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-buy" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-cash-register-purchase-875.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-game-start" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-game-show-intro-331.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-game-win" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-trumpet-2018.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-game-lose" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-retro-game-over-1947.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-667.mp3" type="audio/mpeg">
     </audio>
 
     <script src="script.js"></script>
