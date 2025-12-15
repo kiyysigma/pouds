@@ -4,700 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Pet - Simulasi Pou</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(to bottom, #6a11cb 0%, #2575fc 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #333;
-        }
-        
-        .game-container {
-            width: 100%;
-            max-width: 900px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-        
-        .game-header {
-            background: linear-gradient(to right, #FF416C, #FF4B2B);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 5px solid #ff8a00;
-        }
-        
-        .game-header h1 {
-            font-size: 2.8rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            letter-spacing: 1px;
-        }
-        
-        .game-header p {
-            margin-top: 5px;
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .game-content {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 20px;
-        }
-        
-        .pet-section {
-            flex: 1;
-            min-width: 300px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .pet-container {
-            width: 280px;
-            height: 280px;
-            background: linear-gradient(to bottom, #f9f9f9, #e8e8e8);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            border: 8px solid #ff8a00;
-        }
-        
-        .pet {
-            width: 180px;
-            height: 180px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .pet-body {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, #7b4397, #dc2430);
-            border-radius: 40% 40% 45% 45%;
-            position: relative;
-        }
-        
-        .pet-eye {
-            position: absolute;
-            width: 25px;
-            height: 35px;
-            background-color: white;
-            border-radius: 50%;
-            top: 50px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
-        }
-        
-        .pet-eye.left {
-            left: 45px;
-        }
-        
-        .pet-eye.right {
-            right: 45px;
-        }
-        
-        .pupil {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background-color: #333;
-            border-radius: 50%;
-            top: 10px;
-            left: 6px;
-        }
-        
-        .pet-mouth {
-            position: absolute;
-            width: 50px;
-            height: 25px;
-            background-color: #ff6b6b;
-            border-radius: 0 0 25px 25px;
-            bottom: 50px;
-            left: 65px;
-        }
-        
-        .pet-status {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-        
-        .stats-section {
-            flex: 1;
-            min-width: 300px;
-            padding: 20px;
-        }
-        
-        .stats-container {
-            background-color: #f8f9fa;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            margin-bottom: 25px;
-        }
-        
-        .stats-title {
-            color: #FF416C;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            text-align: center;
-        }
-        
-        .stat-bar {
-            margin-bottom: 20px;
-        }
-        
-        .stat-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        
-        .stat-name {
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .stat-value {
-            font-weight: bold;
-            color: #FF416C;
-        }
-        
-        .bar-container {
-            height: 20px;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .bar-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        
-        .hunger-bar {
-            background: linear-gradient(to right, #FF416C, #FF4B2B);
-            width: 70%;
-        }
-        
-        .happiness-bar {
-            background: linear-gradient(to right, #36D1DC, #5B86E5);
-            width: 85%;
-        }
-        
-        .energy-bar {
-            background: linear-gradient(to right, #FFE000, #799F0C);
-            width: 60%;
-        }
-        
-        .cleanliness-bar {
-            background: linear-gradient(to right, #7F00FF, #E100FF);
-            width: 75%;
-        }
-        
-        .actions-section {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .action-btn {
-            padding: 18px 10px;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            color: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .action-btn i {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .action-btn:active {
-            transform: translateY(0);
-        }
-        
-        .feed-btn {
-            background: linear-gradient(to right, #FF416C, #FF4B2B);
-        }
-        
-        .play-btn {
-            background: linear-gradient(to right, #36D1DC, #5B86E5);
-        }
-        
-        .clean-btn {
-            background: linear-gradient(to right, #7F00FF, #E100FF);
-        }
-        
-        .sleep-btn {
-            background: linear-gradient(to right, #FFE000, #799F0C);
-        }
-        
-        .game-footer {
-            background-color: #f1f1f1;
-            padding: 20px;
-            text-align: center;
-            border-top: 3px solid #ddd;
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .message-box {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 15px 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            max-width: 300px;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.5s ease;
-            z-index: 100;
-            border-left: 6px solid #FF416C;
-        }
-        
-        .message-box.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .message-box p {
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .level-display {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #FF416C;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        @media (max-width: 768px) {
-            .game-content {
-                flex-direction: column;
-            }
-            
-            .pet-section, .stats-section {
-                width: 100%;
-            }
-            
-            .actions-section {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .message-box {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                max-width: 100%;
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="game-container">
-        <div class="game-header">
-            <h1><i class="fas fa-paw"></i> Virtual Pet</h1>
-            <p>Rawat hewan peliharaan virtualmu seperti Pou!</p>
-        </div>
-        
-        <div class="level-display">Level <span id="level">1</span></div>
-        
-        <div class="game-content">
-            <div class="pet-section">
-                <div class="pet-container">
-                    <div class="pet" id="pet">
-                        <div class="pet-body">
-                            <div class="pet-eye left">
-                                <div class="pupil"></div>
-                            </div>
-                            <div class="pet-eye right">
-                                <div class="pupil"></div>
-                            </div>
-                            <div class="pet-mouth"></div>
-                        </div>
-                    </div>
-                    <div class="pet-status" id="pet-status">Senang dan sehat!</div>
-                </div>
-                
-                <div class="actions-section">
-                    <button class="action-btn feed-btn" id="feed-btn">
-                        <i class="fas fa-apple-alt"></i>
-                        Beri Makan
-                    </button>
-                    
-                    <button class="action-btn play-btn" id="play-btn">
-                        <i class="fas fa-gamepad"></i>
-                        Bermain
-                    </button>
-                    
-                    <button class="action-btn clean-btn" id="clean-btn">
-                        <i class="fas fa-shower"></i>
-                        Mandikan
-                    </button>
-                    
-                    <button class="action-btn sleep-btn" id="sleep-btn">
-                        <i class="fas fa-bed"></i>
-                        Tidurkan
-                    </button>
-                </div>
+        <header class="game-header">
+            <div class="header-left">
+                <h1><i class="fas fa-paw"></i> Virtual Pet</h1>
+                <p class="subtitle">Rawat hewan peliharaan virtualmu!</p>
             </div>
             
-            <div class="stats-section">
-                <div class="stats-container">
-                    <h2 class="stats-title">Status Hewan Peliharaan</h2>
-                    
-                    <div class="stat-bar">
-                        <div class="stat-label">
-                            <span class="stat-name">Kelaparan</span>
-                            <span class="stat-value" id="hunger-value">70%</span>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar-fill hunger-bar" id="hunger-bar"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-bar">
-                        <div class="stat-label">
-                            <span class="stat-name">Kebahagiaan</span>
-                            <span class="stat-value" id="happiness-value">85%</span>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar-fill happiness-bar" id="happiness-bar"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-bar">
-                        <div class="stat-label">
-                            <span class="stat-name">Energi</span>
-                            <span class="stat-value" id="energy-value">60%</span>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar-fill energy-bar" id="energy-bar"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-bar">
-                        <div class="stat-label">
-                            <span class="stat-name">Kebersihan</span>
-                            <span class="stat-value" id="cleanliness-value">75%</span>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar-fill cleanliness-bar" id="cleanliness-bar"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-bar">
-                        <div class="stat-label">
-                            <span class="stat-name">Pengalaman</span>
-                            <span class="stat-value" id="xp-value">120/200</span>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar-fill xp-bar" id="xp-bar" style="background: linear-gradient(to right, #00b09b, #96c93d); width: 60%"></div>
-                        </div>
-                    </div>
+            <div class="player-info">
+                <div class="coin-display">
+                    <i class="fas fa-coins"></i>
+                    <span id="coin-count">500</span>
                 </div>
-                
-                <div class="stats-container">
-                    <h2 class="stats-title">Petunjuk Permainan</h2>
-                    <ul style="padding-left: 20px; line-height: 1.6; color: #555;">
-                        <li>Beri makan hewan peliharaanmu agar tidak kelaparan</li>
-                        <li>Bermain dengannya untuk meningkatkan kebahagiaan</li>
-                        <li>Mandikan agar tetap bersih dan sehat</li>
-                        <li>Tidurkan untuk memulihkan energi</li>
-                        <li>Setiap tindakan memberimu pengalaman (XP)</li>
-                        <li>Kumpulkan XP untuk naik level!</li>
-                    </ul>
+                <div class="level-display">
+                    Level <span id="level">1</span>
                 </div>
             </div>
+        </header>
+
+        <main class="game-main">
+            <div class="left-panel">
+                <div class="pet-display">
+                    <div class="pet-container">
+                        <div class="pet" id="pet">
+                            <div class="pet-face">
+                                <div class="eyes">
+                                    <div class="eye left"></div>
+                                    <div class="eye right"></div>
+                                </div>
+                                <div class="mouth"></div>
+                            </div>
+                        </div>
+                        <div class="pet-mood" id="pet-mood">😊</div>
+                    </div>
+                    <div class="pet-name">
+                        <input type="text" id="pet-name-input" value="Petty" maxlength="10">
+                        <button id="change-name-btn"><i class="fas fa-edit"></i></button>
+                    </div>
+                    <div class="pet-status" id="pet-status">Bahagia dan sehat!</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn feed" id="feed-btn">
+                        <i class="fas fa-utensils"></i> Beri Makan
+                    </button>
+                    <button class="action-btn play" id="play-btn">
+                        <i class="fas fa-gamepad"></i> Bermain
+                    </button>
+                    <button class="action-btn clean" id="clean-btn">
+                        <i class="fas fa-bath"></i> Mandikan
+                    </button>
+                    <button class="action-btn sleep" id="sleep-btn">
+                        <i class="fas fa-bed"></i> Tidurkan
+                    </button>
+                </div>
+
+                <div class="extra-buttons">
+                    <button class="extra-btn" id="shop-btn">
+                        <i class="fas fa-shopping-cart"></i> Toko
+                    </button>
+                    <button class="extra-btn" id="minigame-btn">
+                        <i class="fas fa-dice"></i> Mini Game
+                    </button>
+                    <button class="extra-btn" id="sound-toggle">
+                        <i class="fas fa-volume-up"></i> Suara
+                    </button>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="stats-container">
+                    <h2><i class="fas fa-chart-line"></i> Status</h2>
+                    
+                    <div class="stat">
+                        <div class="stat-header">
+                            <span>Kelaparan</span>
+                            <span id="hunger-value">75%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-fill hunger" id="hunger-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-header">
+                            <span>Kebahagiaan</span>
+                            <span id="happiness-value">85%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-fill happiness" id="happiness-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-header">
+                            <span>Energi</span>
+                            <span id="energy-value">60%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-fill energy" id="energy-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-header">
+                            <span>Kebersihan</span>
+                            <span id="cleanliness-value">80%</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-fill cleanliness" id="cleanliness-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-header">
+                            <span>Pengalaman</span>
+                            <span id="xp-value">150/200</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-fill xp" id="xp-bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inventory-container">
+                    <h2><i class="fas fa-box-open"></i> Inventori</h2>
+                    <div class="inventory-grid" id="inventory-items">
+                        <!-- Items akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+
+                <div class="achievements-container">
+                    <h2><i class="fas fa-trophy"></i> Pencapaian</h2>
+                    <div class="achievements-list" id="achievements-list">
+                        <!-- Achievements akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="message-box" id="message-box">
+            <p id="message-text">Hai! Aku hewan peliharaanmu!</p>
         </div>
-        
-        <div class="game-footer">
-            <p>Game Virtual Pet - Dibuat dengan HTML, CSS, dan JavaScript | Terinspirasi oleh Pou</p>
-        </div>
-    </div>
-    
-    <div class="message-box" id="message-box">
-        <p id="message-text">Halo! Aku hewan peliharaan virtualmu!</p>
     </div>
 
-    <script>
-        // Data hewan peliharaan
-        const pet = {
-            hunger: 70,
-            happiness: 85,
-            energy: 60,
-            cleanliness: 75,
-            xp: 120,
-            level: 1,
-            xpNeeded: 200,
-            status: "Senang dan sehat!"
-        };
-        
-        // Elemen DOM
-        const hungerBar = document.getElementById('hunger-bar');
-        const happinessBar = document.getElementById('happiness-bar');
-        const energyBar = document.getElementById('energy-bar');
-        const cleanlinessBar = document.getElementById('cleanliness-bar');
-        const xpBar = document.getElementById('xp-bar');
-        
-        const hungerValue = document.getElementById('hunger-value');
-        const happinessValue = document.getElementById('happiness-value');
-        const energyValue = document.getElementById('energy-value');
-        const cleanlinessValue = document.getElementById('cleanliness-value');
-        const xpValue = document.getElementById('xp-value');
-        const levelDisplay = document.getElementById('level');
-        const petStatus = document.getElementById('pet-status');
-        const messageBox = document.getElementById('message-box');
-        const messageText = document.getElementById('message-text');
-        const petElement = document.getElementById('pet');
-        
-        // Tombol aksi
-        const feedBtn = document.getElementById('feed-btn');
-        const playBtn = document.getElementById('play-btn');
-        const cleanBtn = document.getElementById('clean-btn');
-        const sleepBtn = document.getElementById('sleep-btn');
-        
-        // Update tampilan statistik
-        function updateStats() {
-            // Update nilai statistik
-            hungerBar.style.width = `${pet.hunger}%`;
-            happinessBar.style.width = `${pet.happiness}%`;
-            energyBar.style.width = `${pet.energy}%`;
-            cleanlinessBar.style.width = `${pet.cleanliness}%`;
-            
-            // Update teks nilai
-            hungerValue.textContent = `${pet.hunger}%`;
-            happinessValue.textContent = `${pet.happiness}%`;
-            energyValue.textContent = `${pet.energy}%`;
-            cleanlinessValue.textContent = `${pet.cleanliness}%`;
-            
-            // Update XP
-            const xpPercent = (pet.xp / pet.xpNeeded) * 100;
-            xpBar.style.width = `${xpPercent}%`;
-            xpValue.textContent = `${pet.xp}/${pet.xpNeeded}`;
-            
-            // Update level
-            levelDisplay.textContent = pet.level;
-            
-            // Update status hewan peliharaan
-            petStatus.textContent = pet.status;
-            
-            // Update ekspresi hewan peliharaan berdasarkan statistik
-            updatePetExpression();
-        }
-        
-        // Update ekspresi hewan peliharaan berdasarkan statistik
-        function updatePetExpression() {
-            // Reset ukuran normal
-            petElement.style.transform = 'scale(1)';
-            
-            // Jika sangat lapar atau tidak bahagia, hewan peliharaan terlihat sedih
-            if (pet.hunger < 30 || pet.happiness < 30) {
-                petElement.style.transform = 'scale(0.9)';
-                pet.status = "Lapar atau sedih...";
-            }
-            
-            // Jika energi sangat rendah
-            if (pet.energy < 20) {
-                pet.status = "Sangat lelah...";
-            }
-            
-            // Jika sangat kotor
-            if (pet.cleanliness < 20) {
-                pet.status = "Kotor dan tidak nyaman...";
-            }
-            
-            // Jika semua statistik baik
-            if (pet.hunger > 70 && pet.happiness > 70 && pet.energy > 70 && pet.cleanliness > 70) {
-                pet.status = "Sangat senang dan sehat!";
-                petElement.style.transform = 'scale(1.05)';
-            }
-        }
-        
-        // Tampilkan pesan
-        function showMessage(text) {
-            messageText.textContent = text;
-            messageBox.classList.add('show');
-            
-            // Sembunyikan pesan setelah 3 detik
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Tambah XP
-        function addXP(amount) {
-            pet.xp += amount;
-            
-            // Cek apakah sudah cukup untuk naik level
-            if (pet.xp >= pet.xpNeeded) {
-                pet.level++;
-                pet.xp = pet.xp - pet.xpNeeded;
-                pet.xpNeeded = Math.floor(pet.xpNeeded * 1.5);
-                
-                showMessage(`Selamat! Hewan peliharaanmu naik ke level ${pet.level}!`);
-            }
-            
-            updateStats();
-        }
-        
-        // Fungsi beri makan
-        function feedPet() {
-            if (pet.hunger >= 100) {
-                showMessage("Hewan peliharaan sudah kenyang!");
-                return;
-            }
-            
-            pet.hunger = Math.min(100, pet.hunger + 15);
-            pet.energy = Math.max(0, pet.energy - 5);
-            pet.cleanliness = Math.max(0, pet.cleanliness - 5);
-            
-            showMessage("Yum! Makanan enak! Terima kasih!");
-            addXP(10);
-            updateStats();
-        }
-        
-        // Fungsi bermain
-        function playWithPet() {
-            if (pet.energy < 20) {
-                showMessage("Hewan peliharaan terlalu lelah untuk bermain!");
-                return;
-            }
-            
-            pet.happiness = Math.min(100, pet.happiness + 20);
-            pet.energy = Math.max(0, pet.energy - 15);
-            pet.hunger = Math.max(0, pet.hunger - 10);
-            
-            showMessage("Wah! Seru sekali bermain denganmu!");
-            addXP(15);
-            updateStats();
-        }
-        
-        // Fungsi mandi
-        function cleanPet() {
-            if (pet.cleanliness >= 100) {
-                showMessage("Hewan peliharaan sudah bersih!");
-                return;
-            }
-            
-            pet.cleanliness = Math.min(100, pet.cleanliness + 25);
-            pet.happiness = Math.min(100, pet.happiness + 10);
-            pet.energy = Math.max(0, pet.energy - 5);
-            
-            showMessage("Segar sekali setelah mandi!");
-            addXP(8);
-            updateStats();
-        }
-        
-        // Fungsi tidur
-        function putPetToSleep() {
-            if (pet.energy >= 100) {
-                showMessage("Hewan peliharaan tidak mengantuk!");
-                return;
-            }
-            
-            pet.energy = Math.min(100, pet.energy + 30);
-            pet.hunger = Math.max(0, pet.hunger - 15);
-            pet.happiness = Math.max(0, pet.happiness - 5);
-            
-            showMessage("Zzz... Hewan peliharaan sedang tidur nyenyak...");
-            addXP(5);
-            updateStats();
-        }
-        
-        // Fungsi degradasi statistik seiring waktu
-        function degradeStats() {
-            // Degradasi statistik secara perlahan
-            pet.hunger = Math.max(0, pet.hunger - 1);
-            pet.happiness = Math.max(0, pet.happiness - 0.5);
-            pet.cleanliness = Math.max(0, pet.cleanliness - 0.8);
-            
-            // Jika energi rendah, hewan peliharaan bisa tidur sendiri
-            if (pet.energy < 30 && Math.random() > 0.7) {
-                pet.energy = Math.min(100, pet.energy + 20);
-                showMessage("Hewan peliharaan tidur sebentar...");
-            }
-            
-            updateStats();
-        }
-        
-        // Event listeners untuk tombol aksi
-        feedBtn.addEventListener('click', feedPet);
-        playBtn.addEventListener('click', playWithPet);
-        cleanBtn.addEventListener('click', cleanPet);
-        sleepBtn.addEventListener('click', putPetToSleep);
-        
-        // Animasi hewan peliharaan saat dihover
-        petElement.addEventListener('mouseover', () => {
-            petElement.style.transform = 'scale(1.05)';
-        });
-        
-        petElement.addEventListener('mouseout', () => {
-            updatePetExpression();
-        });
-        
-        // Degradasi statistik setiap 30 detik
-        setInterval(degradeStats, 30000);
-        
-        // Tampilkan pesan selamat datang
-        setTimeout(() => {
-            showMessage("Halo! Aku hewan peliharaan virtualmu. Rawat aku ya!");
-        }, 1000);
-        
-        // Inisialisasi statistik
-        updateStats();
-    </script>
+    <!-- Modal Toko -->
+    <div class="modal" id="shop-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-store"></i> Toko Makanan</h2>
+                <button class="close-btn" id="close-shop">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="shop-coins">
+                    <i class="fas fa-coins"></i> <span id="shop-coin-count">500</span>
+                </div>
+                <div class="shop-items" id="shop-items">
+                    <!-- Items toko akan diisi oleh JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Mini Game -->
+    <div class="modal" id="minigame-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-dice"></i> Mini Game - Koin Berjatuhan</h2>
+                <button class="close-btn" id="close-minigame">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="minigame-instructions">
+                    <p>Klik koin yang jatuh untuk mengumpulkan poin! Dapatkan 10 poin dalam 30 detik untuk menang!</p>
+                    <div class="minigame-stats">
+                        <div>Waktu: <span id="game-time">30</span>s</div>
+                        <div>Poin: <span id="game-score">0</span></div>
+                        <div>Target: 10 poin</div>
+                    </div>
+                </div>
+                <div class="minigame-area" id="minigame-area">
+                    <!-- Koin akan muncul di sini -->
+                </div>
+                <button class="start-game-btn" id="start-game-btn">Mulai Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="sound-eat" src="sounds/eat.mp3" preload="auto"></audio>
+    <audio id="sound-play" src="sounds/play.mp3" preload="auto"></audio>
+    <audio id="sound-clean" src="sounds/clean.mp3" preload="auto"></audio>
+    <audio id="sound-sleep" src="sounds/sleep.mp3" preload="auto"></audio>
+    <audio id="sound-coin" src="sounds/coin.mp3" preload="auto"></audio>
+    <audio id="sound-levelup" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
 </body>
 </html>
